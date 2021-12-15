@@ -76,20 +76,20 @@ public class SampleTacticsAmbulanceTeam extends TacticsAmbulanceTeam {
         switch (scenarioInfo.getMode()) {
         case PRECOMPUTATION_PHASE:
         case PRECOMPUTED:
-            this.humanDetector            = moduleManager.getModule("TacticsAmbulanceTeam.HumanDetector", "adf.sample.module.complex.SampleHumanDetector");
-            this.search                   = moduleManager.getModule("TacticsAmbulanceTeam.Search", "adf.sample.module.complex.SampleSearch");
-            this.actionTransport          = moduleManager.getExtAction("TacticsAmbulanceTeam.ActionTransport", "adf.sample.extaction.ActionTransport");
-            this.actionExtMove            = moduleManager.getExtAction("TacticsAmbulanceTeam.ActionExtMove", "adf.sample.extaction.ActionExtMove");
+            this.humanDetector = moduleManager.getModule("TacticsAmbulanceTeam.HumanDetector", "adf.sample.module.complex.SampleHumanDetector");
+            this.search = moduleManager.getModule("TacticsAmbulanceTeam.Search", "adf.sample.module.complex.SampleSearch");
+            this.actionTransport = moduleManager.getExtAction("TacticsAmbulanceTeam.ActionTransport", "adf.sample.extaction.ActionTransport");
+            this.actionExtMove = moduleManager.getExtAction("TacticsAmbulanceTeam.ActionExtMove", "adf.sample.extaction.ActionExtMove");
             this.commandExecutorAmbulance = moduleManager.getCommandExecutor("TacticsAmbulanceTeam.CommandExecutorAmbulance", "adf.sample.centralized.CommandExecutorAmbulance");
-            this.commandExecutorScout     = moduleManager.getCommandExecutor("TacticsAmbulanceTeam.CommandExecutorScout", "adf.sample.centralized.CommandExecutorScout");
+            this.commandExecutorScout = moduleManager.getCommandExecutor("TacticsAmbulanceTeam.CommandExecutorScout", "adf.sample.centralized.CommandExecutorScout");
             break;
         case NON_PRECOMPUTE:
-            this.humanDetector            = moduleManager.getModule("TacticsAmbulanceTeam.HumanDetector", "adf.sample.module.complex.SampleHumanDetector");
-            this.search                   = moduleManager.getModule("TacticsAmbulanceTeam.Search", "adf.sample.module.complex.SampleSearch");
-            this.actionTransport          = moduleManager.getExtAction("TacticsAmbulanceTeam.ActionTransport", "adf.sample.extaction.ActionTransport");
-            this.actionExtMove            = moduleManager.getExtAction("TacticsAmbulanceTeam.ActionExtMove", "adf.sample.extaction.ActionExtMove");
+            this.humanDetector = moduleManager.getModule("TacticsAmbulanceTeam.HumanDetector", "adf.sample.module.complex.SampleHumanDetector");
+            this.search = moduleManager.getModule("TacticsAmbulanceTeam.Search", "adf.sample.module.complex.SampleSearch");
+            this.actionTransport = moduleManager.getExtAction("TacticsAmbulanceTeam.ActionTransport", "adf.sample.extaction.ActionTransport");
+            this.actionExtMove = moduleManager.getExtAction("TacticsAmbulanceTeam.ActionExtMove", "adf.sample.extaction.ActionExtMove");
             this.commandExecutorAmbulance = moduleManager.getCommandExecutor("TacticsAmbulanceTeam.CommandExecutorAmbulance", "adf.sample.centralized.CommandExecutorAmbulance");
-            this.commandExecutorScout     = moduleManager.getCommandExecutor("TacticsAmbulanceTeam.CommandExecutorScout", "adf.sample.centralized.CommandExecutorScout");
+            this.commandExecutorScout = moduleManager.getCommandExecutor("TacticsAmbulanceTeam.CommandExecutorScout", "adf.sample.centralized.CommandExecutorScout");
         }
         registerModule(this.humanDetector);
         registerModule(this.search);
@@ -138,7 +138,7 @@ public class SampleTacticsAmbulanceTeam extends TacticsAmbulanceTeam {
             WorldViewLauncher.getInstance().showTimeStep(agentInfo, worldInfo, scenarioInfo);
         }
         AmbulanceTeam agent = (AmbulanceTeam)agentInfo.me();
-        EntityID agentID    = agentInfo.getID();
+        EntityID agentID = agentInfo.getID();
         // command
         for (CommunicationMessage message : messageManager.getReceivedMessageList(CommandScout.class)) {
             CommandScout command = (CommandScout)message;
@@ -168,7 +168,7 @@ public class SampleTacticsAmbulanceTeam extends TacticsAmbulanceTeam {
         }
         // autonomous
         EntityID target = this.humanDetector.calc().getTarget();
-        Action action   = this.actionTransport.setTarget(target).calc().getAction();
+        Action action = this.actionTransport.setTarget(target).calc().getAction();
         if (action != null) {
             this.sendActionMessage(messageManager, agent, action);
             return action;
@@ -188,26 +188,26 @@ public class SampleTacticsAmbulanceTeam extends TacticsAmbulanceTeam {
     private void sendActionMessage(MessageManager messageManager, AmbulanceTeam ambulance, Action action)
     {
         Class<? extends Action> actionClass = action.getClass();
-        int actionIndex                     = -1;
-        EntityID target                     = null;
+        int actionIndex = -1;
+        EntityID target = null;
         if (actionClass == ActionMove.class) {
-            actionIndex         = MessageAmbulanceTeam.ACTION_MOVE;
+            actionIndex = MessageAmbulanceTeam.ACTION_MOVE;
             List<EntityID> path = ((ActionMove)action).getPath();
             if (path.size() > 0) {
                 target = path.get(path.size() - 1);
             }
         } else if (actionClass == ActionRescue.class) {
             actionIndex = MessageAmbulanceTeam.ACTION_RESCUE;
-            target      = ((ActionRescue)action).getTarget();
+            target = ((ActionRescue)action).getTarget();
         } else if (actionClass == ActionLoad.class) {
             actionIndex = MessageAmbulanceTeam.ACTION_LOAD;
-            target      = ((ActionLoad)action).getTarget();
+            target = ((ActionLoad)action).getTarget();
         } else if (actionClass == ActionUnload.class) {
             actionIndex = MessageAmbulanceTeam.ACTION_UNLOAD;
-            target      = ambulance.getPosition();
+            target = ambulance.getPosition();
         } else if (actionClass == ActionRest.class) {
             actionIndex = MessageAmbulanceTeam.ACTION_REST;
-            target      = ambulance.getPosition();
+            target = ambulance.getPosition();
         }
         if (actionIndex != -1) {
             messageManager.addMessage(new MessageAmbulanceTeam(true, ambulance, actionIndex, target));
