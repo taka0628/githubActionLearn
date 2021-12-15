@@ -2,5 +2,5 @@ BasedOnStyle: WebKit
 IndentWidth: 4
 Language: Java
 Standard: Auto
-AlignConsecutiveAssignments: true
+# AlignConsecutiveAssignments: true
 AlignTrailingComments: true

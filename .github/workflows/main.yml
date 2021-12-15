@@ -1,40 +1,19 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: test-clang-format
 
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-  # branches: [main, develop]
+on: [push]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      - name: install tools
-        run: |
-          echo "install"
-          sudo apt update
-          sudo apt install clang-format
-          git config --global user.email "action@github.com"
-          git config --global user.name "GitHub Action"
-      - name: refactor
-        run: |
-          clang-format -i -style=file $(find . -name "*.java" -type f)
-          git add .
-          git commit -m "refactor by Github Actions"
-      - name: push
-        run: |
-          git push origin
+    - uses: actions/checkout@v2
+    - uses: DoozyX/clang-format-lint-action@v0.13
+      with:
+        source: $(find . -name "*.java" -type f)
+        # exclude: './third_party ./external'
+        extensions: 'java'
+        clangFormatVersion: 12
+        style: file
