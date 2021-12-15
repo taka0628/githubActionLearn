@@ -1,5 +1,6 @@
 package adf.sample.centralized;
 
+import static rescuecore2.standard.entities.StandardEntityURN.REFUGE;
 
 import adf.agent.action.common.ActionMove;
 import adf.agent.communication.MessageManager;
@@ -13,21 +14,18 @@ import adf.agent.module.ModuleManager;
 import adf.agent.precompute.PrecomputeData;
 import adf.component.centralized.CommandExecutor;
 import adf.component.module.algorithm.PathPlanning;
-import rescuecore2.standard.entities.Area;
-import rescuecore2.worldmodel.AbstractEntity;
-import rescuecore2.worldmodel.EntityID;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static rescuecore2.standard.entities.StandardEntityURN.REFUGE;
+import rescuecore2.standard.entities.Area;
+import rescuecore2.worldmodel.AbstractEntity;
+import rescuecore2.worldmodel.EntityID;
 
 public class CommandExecutorScout extends CommandExecutor<CommandScout> {
     private static final int ACTION_UNKNOWN = -1;
-    private static final int ACTION_SCOUT = 1;
+    private static final int ACTION_SCOUT   = 1;
 
     private PathPlanning pathPlanning;
 
@@ -35,67 +33,70 @@ public class CommandExecutorScout extends CommandExecutor<CommandScout> {
     private Collection<EntityID> scoutTargets;
     private EntityID commanderID;
 
-    public CommandExecutorScout(AgentInfo ai, WorldInfo wi, ScenarioInfo si, ModuleManager moduleManager, DevelopData developData) {
+    public CommandExecutorScout(AgentInfo ai, WorldInfo wi, ScenarioInfo si, ModuleManager moduleManager, DevelopData developData)
+    {
         super(ai, wi, si, moduleManager, developData);
         this.type = ACTION_UNKNOWN;
-        switch  (scenarioInfo.getMode()) {
-            case PRECOMPUTATION_PHASE:
-                this.pathPlanning = moduleManager.getModule("CommandExecutorScout.PathPlanning", "adf.sample.module.algorithm.SamplePathPlanning");
-                break;
-            case PRECOMPUTED:
-                this.pathPlanning = moduleManager.getModule("CommandExecutorScout.PathPlanning", "adf.sample.module.algorithm.SamplePathPlanning");
-                break;
-            case NON_PRECOMPUTE:
-                this.pathPlanning = moduleManager.getModule("CommandExecutorScout.PathPlanning", "adf.sample.module.algorithm.SamplePathPlanning");
-                break;
+        switch (scenarioInfo.getMode()) {
+        case PRECOMPUTATION_PHASE:
+            this.pathPlanning = moduleManager.getModule("CommandExecutorScout.PathPlanning", "adf.sample.module.algorithm.SamplePathPlanning");
+            break;
+        case PRECOMPUTED:
+            this.pathPlanning = moduleManager.getModule("CommandExecutorScout.PathPlanning", "adf.sample.module.algorithm.SamplePathPlanning");
+            break;
+        case NON_PRECOMPUTE:
+            this.pathPlanning = moduleManager.getModule("CommandExecutorScout.PathPlanning", "adf.sample.module.algorithm.SamplePathPlanning");
+            break;
         }
     }
 
     @Override
-    public CommandExecutor setCommand(CommandScout command) {
+    public CommandExecutor setCommand(CommandScout command)
+    {
         EntityID agentID = this.agentInfo.getID();
-        if(command.isToIDDefined() && (Objects.requireNonNull(command.getToID()).getValue() == agentID.getValue())) {
+        if (command.isToIDDefined() && (Objects.requireNonNull(command.getToID()).getValue() == agentID.getValue())) {
             EntityID target = command.getTargetID();
-            if(target == null) {
+            if (target == null) {
                 target = this.agentInfo.getPosition();
             }
-            this.type = ACTION_SCOUT;
-            this.commanderID = command.getSenderID();
+            this.type         = ACTION_SCOUT;
+            this.commanderID  = command.getSenderID();
             this.scoutTargets = new HashSet<>();
             this.scoutTargets.addAll(
-                    worldInfo.getObjectsInRange(target, command.getRange())
-                            .stream()
-                            .filter(e -> e instanceof Area && e.getStandardURN() != REFUGE)
-                            .map(AbstractEntity::getID)
-                            .collect(Collectors.toList())
-            );
+                worldInfo.getObjectsInRange(target, command.getRange())
+                    .stream()
+                    .filter(e -> e instanceof Area && e.getStandardURN() != REFUGE)
+                    .map(AbstractEntity::getID)
+                    .collect(Collectors.toList()));
         }
         return this;
     }
 
     @Override
-    public CommandExecutor updateInfo(MessageManager messageManager){
+    public CommandExecutor updateInfo(MessageManager messageManager)
+    {
         super.updateInfo(messageManager);
-        if(this.getCountUpdateInfo() >= 2) {
+        if (this.getCountUpdateInfo() >= 2) {
             return this;
         }
         this.pathPlanning.updateInfo(messageManager);
 
-        if(this.isCommandCompleted()) {
-            if(this.type != ACTION_UNKNOWN) {
+        if (this.isCommandCompleted()) {
+            if (this.type != ACTION_UNKNOWN) {
                 messageManager.addMessage(new MessageReport(true, true, false, this.commanderID));
-                this.type = ACTION_UNKNOWN;
+                this.type         = ACTION_UNKNOWN;
                 this.scoutTargets = null;
-                this.commanderID = null;
+                this.commanderID  = null;
             }
         }
         return this;
     }
 
     @Override
-    public CommandExecutor precompute(PrecomputeData precomputeData) {
+    public CommandExecutor precompute(PrecomputeData precomputeData)
+    {
         super.precompute(precomputeData);
-        if(this.getCountPrecompute() >= 2) {
+        if (this.getCountPrecompute() >= 2) {
             return this;
         }
         this.pathPlanning.precompute(precomputeData);
@@ -103,9 +104,10 @@ public class CommandExecutorScout extends CommandExecutor<CommandScout> {
     }
 
     @Override
-    public CommandExecutor resume(PrecomputeData precomputeData) {
+    public CommandExecutor resume(PrecomputeData precomputeData)
+    {
         super.resume(precomputeData);
-        if(this.getCountResume() >= 2) {
+        if (this.getCountResume() >= 2) {
             return this;
         }
         this.pathPlanning.resume(precomputeData);
@@ -113,9 +115,10 @@ public class CommandExecutorScout extends CommandExecutor<CommandScout> {
     }
 
     @Override
-    public CommandExecutor preparate() {
+    public CommandExecutor preparate()
+    {
         super.preparate();
-        if(this.getCountPreparate() >= 2) {
+        if (this.getCountPreparate() >= 2) {
             return this;
         }
         this.pathPlanning.preparate();
@@ -123,25 +126,27 @@ public class CommandExecutorScout extends CommandExecutor<CommandScout> {
     }
 
     @Override
-    public CommandExecutor calc() {
+    public CommandExecutor calc()
+    {
         this.result = null;
-        if(this.type == ACTION_SCOUT) {
-            if(this.scoutTargets == null || this.scoutTargets.isEmpty()) {
+        if (this.type == ACTION_SCOUT) {
+            if (this.scoutTargets == null || this.scoutTargets.isEmpty()) {
                 return this;
             }
             this.pathPlanning.setFrom(this.agentInfo.getPosition());
             this.pathPlanning.setDestination(this.scoutTargets);
             List<EntityID> path = this.pathPlanning.calc().getResult();
-            if(path != null) {
+            if (path != null) {
                 this.result = new ActionMove(path);
             }
         }
         return this;
     }
 
-    private boolean isCommandCompleted() {
-        if(this.type ==  ACTION_SCOUT) {
-            if(this.scoutTargets != null) {
+    private boolean isCommandCompleted()
+    {
+        if (this.type == ACTION_SCOUT) {
+            if (this.scoutTargets != null) {
                 this.scoutTargets.removeAll(this.worldInfo.getChanged().getChangedEntities());
             }
             return (this.scoutTargets == null || this.scoutTargets.isEmpty());

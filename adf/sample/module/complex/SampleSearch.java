@@ -1,5 +1,7 @@
 package adf.sample.module.complex;
 
+import static rescuecore2.standard.entities.StandardEntityURN.*;
+
 import adf.agent.communication.MessageManager;
 import adf.agent.develop.DevelopData;
 import adf.agent.info.AgentInfo;
@@ -10,15 +12,11 @@ import adf.agent.precompute.PrecomputeData;
 import adf.component.module.algorithm.Clustering;
 import adf.component.module.algorithm.PathPlanning;
 import adf.component.module.complex.Search;
+import java.util.*;
 import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.EntityID;
 
-import java.util.*;
-
-import static rescuecore2.standard.entities.StandardEntityURN.*;
-
-public class SampleSearch extends Search
-{
+public class SampleSearch extends Search {
     private PathPlanning pathPlanning;
     private Clustering clustering;
 
@@ -32,79 +30,60 @@ public class SampleSearch extends Search
         this.unsearchedBuildingIDs = new HashSet<>();
 
         StandardEntityURN agentURN = ai.me().getStandardURN();
-        switch (si.getMode())
-        {
-            case PRECOMPUTATION_PHASE:
-                if (agentURN == AMBULANCE_TEAM)
-                {
-                    this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Ambulance", "adf.sample.module.algorithm.SamplePathPlanning");
-                    this.clustering = moduleManager.getModule("SampleSearch.Clustering.Ambulance", "adf.sample.module.algorithm.SampleKMeans");
-                }
-                else if (agentURN == FIRE_BRIGADE)
-                {
-                    this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Fire", "adf.sample.module.algorithm.SamplePathPlanning");
-                    this.clustering = moduleManager.getModule("SampleSearch.Clustering.Fire", "adf.sample.module.algorithm.SampleKMeans");
-                }
-                else if (agentURN == POLICE_FORCE)
-                {
-                    this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Police", "adf.sample.module.algorithm.SamplePathPlanning");
-                    this.clustering = moduleManager.getModule("SampleSearch.Clustering.Police", "adf.sample.module.algorithm.SampleKMeans");
-                }
-                break;
-            case PRECOMPUTED:
-                if (agentURN == AMBULANCE_TEAM)
-                {
-                    this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Ambulance", "adf.sample.module.algorithm.SamplePathPlanning");
-                    this.clustering = moduleManager.getModule("SampleSearch.Clustering.Ambulance", "adf.sample.module.algorithm.SampleKMeans");
-                }
-                else if (agentURN == FIRE_BRIGADE)
-                {
-                    this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Fire", "adf.sample.module.algorithm.SamplePathPlanning");
-                    this.clustering = moduleManager.getModule("SampleSearch.Clustering.Fire", "adf.sample.module.algorithm.SampleKMeans");
-                }
-                else if (agentURN == POLICE_FORCE)
-                {
-                    this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Police", "adf.sample.module.algorithm.SamplePathPlanning");
-                    this.clustering = moduleManager.getModule("SampleSearch.Clustering.Police", "adf.sample.module.algorithm.SampleKMeans");
-                }
-                break;
-            case NON_PRECOMPUTE:
-                if (agentURN == AMBULANCE_TEAM)
-                {
-                    this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Ambulance", "adf.sample.module.algorithm.SamplePathPlanning");
-                    this.clustering = moduleManager.getModule("SampleSearch.Clustering.Ambulance", "adf.sample.module.algorithm.SampleKMeans");
-                }
-                else if (agentURN == FIRE_BRIGADE)
-                {
-                    this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Fire", "adf.sample.module.algorithm.SamplePathPlanning");
-                    this.clustering = moduleManager.getModule("SampleSearch.Clustering.Fire", "adf.sample.module.algorithm.SampleKMeans");
-                }
-                else if (agentURN == POLICE_FORCE)
-                {
-                    this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Police", "adf.sample.module.algorithm.SamplePathPlanning");
-                    this.clustering = moduleManager.getModule("SampleSearch.Clustering.Police", "adf.sample.module.algorithm.SampleKMeans");
-                }
-                break;
+        switch (si.getMode()) {
+        case PRECOMPUTATION_PHASE:
+            if (agentURN == AMBULANCE_TEAM) {
+                this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Ambulance", "adf.sample.module.algorithm.SamplePathPlanning");
+                this.clustering   = moduleManager.getModule("SampleSearch.Clustering.Ambulance", "adf.sample.module.algorithm.SampleKMeans");
+            } else if (agentURN == FIRE_BRIGADE) {
+                this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Fire", "adf.sample.module.algorithm.SamplePathPlanning");
+                this.clustering   = moduleManager.getModule("SampleSearch.Clustering.Fire", "adf.sample.module.algorithm.SampleKMeans");
+            } else if (agentURN == POLICE_FORCE) {
+                this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Police", "adf.sample.module.algorithm.SamplePathPlanning");
+                this.clustering   = moduleManager.getModule("SampleSearch.Clustering.Police", "adf.sample.module.algorithm.SampleKMeans");
+            }
+            break;
+        case PRECOMPUTED:
+            if (agentURN == AMBULANCE_TEAM) {
+                this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Ambulance", "adf.sample.module.algorithm.SamplePathPlanning");
+                this.clustering   = moduleManager.getModule("SampleSearch.Clustering.Ambulance", "adf.sample.module.algorithm.SampleKMeans");
+            } else if (agentURN == FIRE_BRIGADE) {
+                this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Fire", "adf.sample.module.algorithm.SamplePathPlanning");
+                this.clustering   = moduleManager.getModule("SampleSearch.Clustering.Fire", "adf.sample.module.algorithm.SampleKMeans");
+            } else if (agentURN == POLICE_FORCE) {
+                this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Police", "adf.sample.module.algorithm.SamplePathPlanning");
+                this.clustering   = moduleManager.getModule("SampleSearch.Clustering.Police", "adf.sample.module.algorithm.SampleKMeans");
+            }
+            break;
+        case NON_PRECOMPUTE:
+            if (agentURN == AMBULANCE_TEAM) {
+                this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Ambulance", "adf.sample.module.algorithm.SamplePathPlanning");
+                this.clustering   = moduleManager.getModule("SampleSearch.Clustering.Ambulance", "adf.sample.module.algorithm.SampleKMeans");
+            } else if (agentURN == FIRE_BRIGADE) {
+                this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Fire", "adf.sample.module.algorithm.SamplePathPlanning");
+                this.clustering   = moduleManager.getModule("SampleSearch.Clustering.Fire", "adf.sample.module.algorithm.SampleKMeans");
+            } else if (agentURN == POLICE_FORCE) {
+                this.pathPlanning = moduleManager.getModule("SampleSearch.PathPlanning.Police", "adf.sample.module.algorithm.SamplePathPlanning");
+                this.clustering   = moduleManager.getModule("SampleSearch.Clustering.Police", "adf.sample.module.algorithm.SampleKMeans");
+            }
+            break;
         }
 
         registerModule(this.pathPlanning);
         registerModule(this.clustering);
     }
 
-
     @Override
     public Search updateInfo(MessageManager messageManager)
     {
         super.updateInfo(messageManager);
-        if (this.getCountUpdateInfo() >= 2)
-        {
+        if (this.getCountUpdateInfo() >= 2) {
             return this;
         }
 
         this.unsearchedBuildingIDs.removeAll(this.worldInfo.getChanged().getChangedEntities());
 
-        if (this.unsearchedBuildingIDs.isEmpty())
-        {
+        if (this.unsearchedBuildingIDs.isEmpty()) {
             this.reset();
             this.unsearchedBuildingIDs.removeAll(this.worldInfo.getChanged().getChangedEntities());
         }
@@ -118,8 +97,7 @@ public class SampleSearch extends Search
         this.pathPlanning.setFrom(this.agentInfo.getPosition());
         this.pathPlanning.setDestination(this.unsearchedBuildingIDs);
         List<EntityID> path = this.pathPlanning.calc().getResult();
-        if (path != null && path.size() > 0)
-        {
+        if (path != null && path.size() > 0) {
             this.result = path.get(path.size() - 1);
         }
         return this;
@@ -130,31 +108,23 @@ public class SampleSearch extends Search
         this.unsearchedBuildingIDs.clear();
 
         Collection<StandardEntity> clusterEntities = null;
-        if (this.clustering != null)
-        {
+        if (this.clustering != null) {
             int clusterIndex = this.clustering.getClusterIndex(this.agentInfo.getID());
-            clusterEntities = this.clustering.getClusterEntities(clusterIndex);
-
+            clusterEntities  = this.clustering.getClusterEntities(clusterIndex);
         }
-        if (clusterEntities != null && clusterEntities.size() > 0)
-        {
-            for (StandardEntity entity : clusterEntities)
-            {
-                if (entity instanceof Building && entity.getStandardURN() != REFUGE)
-                {
+        if (clusterEntities != null && clusterEntities.size() > 0) {
+            for (StandardEntity entity : clusterEntities) {
+                if (entity instanceof Building && entity.getStandardURN() != REFUGE) {
                     this.unsearchedBuildingIDs.add(entity.getID());
                 }
             }
-        }
-        else
-        {
+        } else {
             this.unsearchedBuildingIDs.addAll(this.worldInfo.getEntityIDsOfType(
-                    BUILDING,
-                    GAS_STATION,
-                    AMBULANCE_CENTRE,
-                    FIRE_STATION,
-                    POLICE_OFFICE
-            ));
+                BUILDING,
+                GAS_STATION,
+                AMBULANCE_CENTRE,
+                FIRE_STATION,
+                POLICE_OFFICE));
         }
     }
 
@@ -168,8 +138,7 @@ public class SampleSearch extends Search
     public Search precompute(PrecomputeData precomputeData)
     {
         super.precompute(precomputeData);
-        if (this.getCountPrecompute() >= 2)
-        {
+        if (this.getCountPrecompute() >= 2) {
             return this;
         }
         return this;
@@ -179,8 +148,7 @@ public class SampleSearch extends Search
     public Search resume(PrecomputeData precomputeData)
     {
         super.resume(precomputeData);
-        if (this.getCountResume() >= 2)
-        {
+        if (this.getCountResume() >= 2) {
             return this;
         }
         this.worldInfo.requestRollback();
@@ -191,8 +159,7 @@ public class SampleSearch extends Search
     public Search preparate()
     {
         super.preparate();
-        if (this.getCountPreparate() >= 2)
-        {
+        if (this.getCountPreparate() >= 2) {
             return this;
         }
         this.worldInfo.requestRollback();
