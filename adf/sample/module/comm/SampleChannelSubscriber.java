@@ -9,16 +9,16 @@ import rescuecore2.standard.entities.StandardEntityURN;
 
 public class SampleChannelSubscriber extends ChannelSubscriber {
 
-
     @Override
     public void subscribe(AgentInfo agentInfo, WorldInfo worldInfo, ScenarioInfo scenarioInfo,
-                          MessageManager messageManager) {
+        MessageManager messageManager)
+    {
         // subscribe only once at the beginning
         if (agentInfo.getTime() == 1) {
-            int numChannels = scenarioInfo.getCommsChannelsCount()-1; // 0th channel is the voice channel
+            int numChannels = scenarioInfo.getCommsChannelsCount() - 1; // 0th channel is the voice channel
 
             int maxChannelCount = 0;
-            boolean isPlatoon = isPlatoonAgent(agentInfo, worldInfo);
+            boolean isPlatoon   = isPlatoonAgent(agentInfo, worldInfo);
             if (isPlatoon) {
                 maxChannelCount = scenarioInfo.getCommsChannelsMaxPlatoon();
             } else {
@@ -26,7 +26,7 @@ public class SampleChannelSubscriber extends ChannelSubscriber {
             }
 
             StandardEntityURN agentType = getAgentType(agentInfo, worldInfo);
-            int[] channels = new int[maxChannelCount];
+            int[] channels              = new int[maxChannelCount];
             for (int i = 0; i < maxChannelCount; i++) {
                 channels[i] = getChannelNumber(agentType, i, numChannels);
             }
@@ -35,22 +35,23 @@ public class SampleChannelSubscriber extends ChannelSubscriber {
         }
     }
 
-    protected boolean isPlatoonAgent(AgentInfo agentInfo, WorldInfo worldInfo) {
+    protected boolean isPlatoonAgent(AgentInfo agentInfo, WorldInfo worldInfo)
+    {
         StandardEntityURN agentType = getAgentType(agentInfo, worldInfo);
-        if (agentType == StandardEntityURN.FIRE_BRIGADE ||
-                agentType == StandardEntityURN.POLICE_FORCE ||
-                agentType == StandardEntityURN.AMBULANCE_TEAM) {
+        if (agentType == StandardEntityURN.FIRE_BRIGADE || agentType == StandardEntityURN.POLICE_FORCE || agentType == StandardEntityURN.AMBULANCE_TEAM) {
             return true;
         }
         return false;
     }
 
-    protected StandardEntityURN getAgentType(AgentInfo agentInfo, WorldInfo worldInfo) {
+    protected StandardEntityURN getAgentType(AgentInfo agentInfo, WorldInfo worldInfo)
+    {
         StandardEntityURN agentType = worldInfo.getEntity(agentInfo.getID()).getStandardURN();
         return agentType;
     }
 
-    public static int getChannelNumber(StandardEntityURN agentType, int channelIndex, int numChannels) {
+    public static int getChannelNumber(StandardEntityURN agentType, int channelIndex, int numChannels)
+    {
         int agentIndex = 0;
         if (agentType == StandardEntityURN.FIRE_BRIGADE || agentType == StandardEntityURN.FIRE_STATION) {
             agentIndex = 1;
@@ -60,8 +61,8 @@ public class SampleChannelSubscriber extends ChannelSubscriber {
             agentIndex = 3;
         }
 
-        int index = (3*channelIndex)+agentIndex;
-        if ((index%numChannels) == 0) {
+        int index = (3 * channelIndex) + agentIndex;
+        if ((index % numChannels) == 0) {
             index = numChannels;
         } else {
             index = index % numChannels;
@@ -69,7 +70,8 @@ public class SampleChannelSubscriber extends ChannelSubscriber {
         return index;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         int numChannels = 6;
         int maxChannels = 2;
         for (int i = 0; i < maxChannels; i++) {

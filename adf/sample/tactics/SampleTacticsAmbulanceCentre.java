@@ -7,17 +7,15 @@ import adf.agent.info.ScenarioInfo;
 import adf.agent.info.WorldInfo;
 import adf.agent.module.ModuleManager;
 import adf.agent.precompute.PrecomputeData;
-import adf.debug.WorldViewLauncher;
 import adf.component.centralized.CommandPicker;
 import adf.component.communication.CommunicationMessage;
 import adf.component.module.complex.TargetAllocator;
 import adf.component.tactics.TacticsAmbulanceCentre;
+import adf.debug.WorldViewLauncher;
+import java.util.Map;
 import rescuecore2.worldmodel.EntityID;
 
-import java.util.Map;
-
-public class SampleTacticsAmbulanceCentre extends TacticsAmbulanceCentre
-{
+public class SampleTacticsAmbulanceCentre extends TacticsAmbulanceCentre {
     private TargetAllocator allocator;
     private CommandPicker picker;
     private Boolean isVisualDebug;
@@ -28,30 +26,29 @@ public class SampleTacticsAmbulanceCentre extends TacticsAmbulanceCentre
         messageManager.setChannelSubscriber(moduleManager.getChannelSubscriber("MessageManager.CenterChannelSubscriber", "adf.sample.module.comm.SampleChannelSubscriber"));
         messageManager.setMessageCoordinator(moduleManager.getMessageCoordinator("MessageManager.CenterMessageCoordinator", "adf.sample.module.comm.SampleMessageCoordinator"));
 
-        switch (scenarioInfo.getMode())
-        {
-            case PRECOMPUTATION_PHASE:
-            case PRECOMPUTED:
-                this.allocator = moduleManager.getModule(
-                        "TacticsAmbulanceCentre.TargetAllocator",
-                        "adf.sample.module.complex.SampleAmbulanceTargetAllocator");
-                this.picker = moduleManager.getCommandPicker(
-                        "TacticsAmbulanceCentre.CommandPicker",
-                        "adf.sample.centralized.CommandPickerAmbulance");
-                break;
-            case NON_PRECOMPUTE:
-                this.allocator = moduleManager.getModule(
-                        "TacticsAmbulanceCentre.TargetAllocator",
-                        "adf.sample.module.complex.SampleAmbulanceTargetAllocator");
-                this.picker = moduleManager.getCommandPicker(
-                        "TacticsAmbulanceCentre.CommandPicker",
-                        "adf.sample.centralized.CommandPickerAmbulance");
+        switch (scenarioInfo.getMode()) {
+        case PRECOMPUTATION_PHASE:
+        case PRECOMPUTED:
+            this.allocator = moduleManager.getModule(
+                "TacticsAmbulanceCentre.TargetAllocator",
+                "adf.sample.module.complex.SampleAmbulanceTargetAllocator");
+            this.picker = moduleManager.getCommandPicker(
+                "TacticsAmbulanceCentre.CommandPicker",
+                "adf.sample.centralized.CommandPickerAmbulance");
+            break;
+        case NON_PRECOMPUTE:
+            this.allocator = moduleManager.getModule(
+                "TacticsAmbulanceCentre.TargetAllocator",
+                "adf.sample.module.complex.SampleAmbulanceTargetAllocator");
+            this.picker = moduleManager.getCommandPicker(
+                "TacticsAmbulanceCentre.CommandPicker",
+                "adf.sample.centralized.CommandPickerAmbulance");
         }
         registerModule(this.allocator);
         registerModule(this.picker);
 
         this.isVisualDebug = (scenarioInfo.isDebugMode()
-                && moduleManager.getModuleConfig().getBooleanValue("VisualDebug", false));
+            && moduleManager.getModuleConfig().getBooleanValue("VisualDebug", false));
     }
 
     @Override
@@ -59,14 +56,12 @@ public class SampleTacticsAmbulanceCentre extends TacticsAmbulanceCentre
     {
         modulesUpdateInfo(messageManager);
 
-        if (isVisualDebug)
-        {
+        if (isVisualDebug) {
             WorldViewLauncher.getInstance().showTimeStep(agentInfo, worldInfo, scenarioInfo);
         }
 
         Map<EntityID, EntityID> allocatorResult = this.allocator.calc().getResult();
-        for (CommunicationMessage message : this.picker.setAllocatorResult(allocatorResult).calc().getResult())
-        {
+        for (CommunicationMessage message : this.picker.setAllocatorResult(allocatorResult).calc().getResult()) {
             messageManager.addMessage(message);
         }
     }
@@ -76,8 +71,7 @@ public class SampleTacticsAmbulanceCentre extends TacticsAmbulanceCentre
     {
         modulesResume(precomputeData);
 
-        if (isVisualDebug)
-        {
+        if (isVisualDebug) {
             WorldViewLauncher.getInstance().showTimeStep(agentInfo, worldInfo, scenarioInfo);
         }
     }
@@ -87,8 +81,7 @@ public class SampleTacticsAmbulanceCentre extends TacticsAmbulanceCentre
     {
         modulesPreparate();
 
-        if (isVisualDebug)
-        {
+        if (isVisualDebug) {
             WorldViewLauncher.getInstance().showTimeStep(agentInfo, worldInfo, scenarioInfo);
         }
     }

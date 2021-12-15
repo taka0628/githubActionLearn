@@ -8,13 +8,11 @@ import adf.agent.info.WorldInfo;
 import adf.agent.module.ModuleManager;
 import adf.agent.precompute.PrecomputeData;
 import adf.component.module.complex.PoliceTargetAllocator;
-import rescuecore2.worldmodel.EntityID;
-
 import java.util.HashMap;
 import java.util.Map;
+import rescuecore2.worldmodel.EntityID;
 
-public class SampleDecentralizedPoliceTargetAllocator extends PoliceTargetAllocator
-{
+public class SampleDecentralizedPoliceTargetAllocator extends PoliceTargetAllocator {
     public SampleDecentralizedPoliceTargetAllocator(AgentInfo ai, WorldInfo wi, ScenarioInfo si, ModuleManager moduleManager, DevelopData developData)
     {
         super(ai, wi, si, moduleManager, developData);
@@ -24,8 +22,7 @@ public class SampleDecentralizedPoliceTargetAllocator extends PoliceTargetAlloca
     public PoliceTargetAllocator resume(PrecomputeData precomputeData)
     {
         super.resume(precomputeData);
-        if (this.getCountResume() >= 2)
-        {
+        if (this.getCountResume() >= 2) {
             return this;
         }
         return this;
@@ -35,8 +32,7 @@ public class SampleDecentralizedPoliceTargetAllocator extends PoliceTargetAlloca
     public PoliceTargetAllocator preparate()
     {
         super.preparate();
-        if (this.getCountPrecompute() >= 2)
-        {
+        if (this.getCountPrecompute() >= 2) {
             return this;
         }
         return this;
@@ -58,8 +54,7 @@ public class SampleDecentralizedPoliceTargetAllocator extends PoliceTargetAlloca
     public PoliceTargetAllocator updateInfo(MessageManager messageManager)
     {
         super.updateInfo(messageManager);
-        if (this.getCountUpdateInfo() >= 2)
-        {
+        if (this.getCountUpdateInfo() >= 2) {
             return this;
         }
         return this;
