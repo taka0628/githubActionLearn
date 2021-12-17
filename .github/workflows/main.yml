@@ -2,18 +2,20 @@
 
 name: test-clang-format
 
-on: [push]
+on:
+  push:
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: DoozyX/clang-format-lint-action@v0.13
-      with:
-        source: $(find . -name "*.java" -type f)
-        # exclude: './third_party ./external'
-        extensions: 'java'
-        clangFormatVersion: 12
-        style: file
+      - uses: actions/checkout@v2
+      - uses: DoozyX/clang-format-lint-action@v0.13
+        with:
+          source: $(find . -name "*.java" -type f)
+          # exclude: './third_party ./external'
+          extensions: "java"
+          clangFormatVersion: 12
+          style: file
