@@ -1,5 +1,5 @@
 BasedOnStyle: WebKit
-IndentWidth: 2
+IndentWidth: 4
 Language: Java
 Standard: Auto
 AlignConsecutiveAssignments: true
